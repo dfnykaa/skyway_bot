@@ -11,7 +11,7 @@ const fs = require('fs');
 const path = require('path');
 
 
-const TOKEN = process.env.DISCORD_TOKEN || 'MTQ4MDEyMzI3NDE3MDk5MDY3NA.G59Ajq.KbwLSxDHmaHmwKmFBtOi5s13u6CKLmj_-lStus'; 
+const TOKEN = process.env.DISCORD_TOKEN || 'MTQ4MDEyMzI3NDE3MDk5MDY3NA.GyPwPS.P49CJWynlT80kc2BodZHrPFZyqPoz2VZWe9ta4'; 
 const CLIENT_ID = '1480123274170990674'; 
 
 const BLACKLIST_CHANNEL_ID = '1552378277191090306'; 
@@ -96,6 +96,10 @@ async function updateMemberCount() {
 client.once('ready', () => {
     console.log(`🤖 Bot ${client.user.tag} je spuštěn a připraven!`);
     
+    client.user.setPresence({
+        status: 'invisible'
+    });
+
     updateMemberCount();
     setInterval(updateMemberCount, 10 * 60 * 1000);
 });
