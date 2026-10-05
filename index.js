@@ -10,21 +10,21 @@ const {
 const fs = require('fs');
 const path = require('path');
 
-// ==========================================
-// CONFIGURATION (Nezapomeň po resetu vložit NOVÝ token!)
-// ==========================================
-const TOKEN = 'MTQ4MDEyMzI3NDE3MDk5MDY3NA.GluDfH.C8u_nRQoYre1e4r4lOLO7bKQA-STHhaOy4HHuU'; 
+
+const TOKEN = process.env.DISCORD_TOKEN || 'MTQ4MDEyMzI3NDE3MDk5MDY3NA.G59Ajq.KbwLSxDHmaHmwKmFBtOi5s13u6CKLmj_-lStus'; 
 const CLIENT_ID = '1480123274170990674'; 
 
 const BLACKLIST_CHANNEL_ID = '1552378277191090306'; 
 const BLACKLIST_ROLE_ID = '1549476288551460935'; 
 const COUNTER_CHANNEL_ID = '1555650966110478446'; 
 
+const WELCOME_CHANNEL_ID = '1549153567254913105'; 
+const INFO_CHANNEL_ID = '1549153567254913105';
+
+const WELCOME_IMAGE_URL = 'https://i.imgur.com/vytvor_a_vloz_odkaz_na_obrazek.png'; 
+
 const DATA_FILE = path.join(__dirname, 'blacklists.json');
 
-// ==========================================
-// HELPERS FOR JSON DATABASE
-// ==========================================
 function loadBlacklists() {
     if (!fs.existsSync(DATA_FILE)) return {};
     try {
@@ -38,9 +38,7 @@ function saveBlacklists(data) {
     fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
 }
 
-// ==========================================
-// CLIENT CREATION
-// ==========================================
+
 const client = new Client({ 
     intents: [
         GatewayIntentBits.Guilds, 
@@ -48,9 +46,6 @@ const client = new Client({
     ] 
 });
 
-// ==========================================
-// SLASH COMMANDS DEFINITION & REGISTRATION
-// ==========================================
 const commands = [
     new SlashCommandBuilder()
         .setName('blacklist')
@@ -77,9 +72,7 @@ const rest = new REST({ version: '10' }).setToken(TOKEN);
     }
 })();
 
-// ==========================================
-// MEMBER COUNT UPDATE FUNCTION
-// ==========================================
+
 async function updateMemberCount() {
     try {
         const channel = await client.channels.fetch(COUNTER_CHANNEL_ID);
@@ -100,15 +93,40 @@ async function updateMemberCount() {
     }
 }
 
-// ==========================================
-// EVENTS
-// ==========================================
 client.once('ready', () => {
     console.log(`🤖 Bot ${client.user.tag} je spuštěn a připraven!`);
     
-    // Spustí aktualizaci počítadla při startu a pak každých 10 minut
     updateMemberCount();
     setInterval(updateMemberCount, 10 * 60 * 1000);
+});
+
+client.on('guildMemberAdd', async member => {
+    try {
+        const welcomeChannel = member.guild.channels.cache.get(WELCOME_CHANNEL_ID);
+        if (!welcomeChannel) return console.error('Welcome kanál nebyl nalezen.');
+
+        const welcomeEmbed = new EmbedBuilder()
+            .setColor('#502a7c')
+            .setTitle('SkyWay Roleplay | CZ/SK Roleplay')
+            .setDescription(
+                `Vítej ${member}!\n\n` +
+                `Před připojením si prosím přečti <#${INFO_CHANNEL_ID}>\n` +
+                `**Přejeme ti příjemnou zábavu a mnoho zážitků!**`
+            )
+            .setImage(WELCOME_IMAGE_URL)
+            .setFooter({ 
+                text: 'SkyWay Roleplay | CZ/SK Roleplay', 
+                iconURL: member.guild.iconURL() 
+            });
+
+        await welcomeChannel.send({
+            content: `Vítej ${member}!`,
+            embeds: [welcomeEmbed]
+        });
+
+    } catch (error) {
+        console.error('Chyba při odesílání welcome zprávy:', error);
+    }
 });
 
 client.on('interactionCreate', async interaction => {
@@ -125,7 +143,6 @@ client.on('interactionCreate', async interaction => {
     if (!target) return interaction.reply({ content: 'Uživatel nebyl na serveru nalezen.', ephemeral: true });
     if (!logChannel) return interaction.reply({ content: 'Chyba: Nepodařilo se najít logovací místnost!', ephemeral: true });
 
-    // --- /blacklist COMMAND ---
     if (commandName === 'blacklist') {
         const reason = interaction.options.getString('duvod') || 'Neuveden';
 
@@ -186,7 +203,6 @@ client.on('interactionCreate', async interaction => {
         }
     }
 
-    // --- /unb COMMAND ---
     if (commandName === 'unb') {
         const unblackReason = interaction.options.getString('duvod') || 'Neuveden';
 
@@ -250,7 +266,4 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
-// ==========================================
-// LOGIN
-// ==========================================
 client.login(TOKEN);
