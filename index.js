@@ -18,10 +18,10 @@ const BLACKLIST_CHANNEL_ID = '1552378277191090306';
 const BLACKLIST_ROLE_ID = '1549476288551460935'; 
 const COUNTER_CHANNEL_ID = '1555650966110478446'; 
 
-const WELCOME_CHANNEL_ID = '1549153567254913105'; 
-const INFO_CHANNEL_ID = '1549153567254913105';
+const WELCOME_CHANNEL_ID = '1556774327200776242'; 
+const INFO_CHANNEL_ID = '1549153936609644555';
 
-const WELCOME_IMAGE_URL = 'https://i.imgur.com/vytvor_a_vloz_odkaz_na_obrazek.png'; 
+const WELCOME_IMAGE_URL = 'https://cdn.discordapp.com/attachments/1494695230518329475/1556774450882416730/welcome.png?backend=b2&ex=6ac562b0&is=6ac41130&hm=9298a4ff019d1bb58e90dd070e4954bd1bbf5b7f7ad8cce4627e52d26f2b094d&'; 
 
 const DATA_FILE = path.join(__dirname, 'blacklists.json');
 
