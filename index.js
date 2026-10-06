@@ -64,7 +64,7 @@ const rest = new REST({ version: '10' }).setToken(TOKEN);
 
 (async () => {
     try {
-        console.log('🔄 Registruji slash příkazy...');
+        console.log('🔄 Registruji  příkazy...');
         await rest.put(Routes.applicationCommands(CLIENT_ID), { body: commands });
         console.log('✅ Příkazy úspěšně zaregistrovány!');
     } catch (error) {
