@@ -11,7 +11,7 @@ const fs = require('fs');
 const path = require('path');
 
 
-const TOKEN = process.env.DISCORD_TOKEN || 'MTQ4MDEyMzI3NDE3MDk5MDY3NA.GyPwPS.P49CJWynlT80kc2BodZHrPFZyqPoz2VZWe9ta4'; 
+const TOKEN = process.env.DISCORD_TOKEN || 'MTQ4MDEyMzI3NDE3MDk5MDY3NA.GipZ2o.3ZfeAkdb2xmynB9zq6qZBeh5XyjDWyO8BQaNLk'; 
 const CLIENT_ID = '1480123274170990674'; 
 
 const BLACKLIST_CHANNEL_ID = '1552378277191090306'; 
