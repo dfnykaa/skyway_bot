@@ -11,17 +11,12 @@ const fs = require('fs');
 const path = require('path');
 
 
-const TOKEN = process.env.DISCORD_TOKEN || 'MTQ4MDEyMzI3NDE3MDk5MDY3NA.GipZ2o.3ZfeAkdb2xmynB9zq6qZBeh5XyjDWyO8BQaNLk'; 
+const TOKEN = process.env.DISCORD_TOKEN; 
 const CLIENT_ID = '1480123274170990674'; 
 
 const BLACKLIST_CHANNEL_ID = '1552378277191090306'; 
 const BLACKLIST_ROLE_ID = '1549476288551460935'; 
 const COUNTER_CHANNEL_ID = '1555650966110478446'; 
-
-const WELCOME_CHANNEL_ID = '1556774327200776242'; 
-const INFO_CHANNEL_ID = '1549153936609644555';
-
-const WELCOME_IMAGE_URL = 'https://cdn.discordapp.com/attachments/1494695230518329475/1556774450882416730/welcome.png?backend=b2&ex=6ac562b0&is=6ac41130&hm=9298a4ff019d1bb58e90dd070e4954bd1bbf5b7f7ad8cce4627e52d26f2b094d&'; 
 
 const DATA_FILE = path.join(__dirname, 'blacklists.json');
 
@@ -64,7 +59,7 @@ const rest = new REST({ version: '10' }).setToken(TOKEN);
 
 (async () => {
     try {
-        console.log('🔄 Registruji  příkazy...');
+        console.log('🔄 Registruji příkazy...');
         await rest.put(Routes.applicationCommands(CLIENT_ID), { body: commands });
         console.log('✅ Příkazy úspěšně zaregistrovány!');
     } catch (error) {
@@ -102,35 +97,6 @@ client.once('ready', () => {
 
     updateMemberCount();
     setInterval(updateMemberCount, 10 * 60 * 1000);
-});
-
-client.on('guildMemberAdd', async member => {
-    try {
-        const welcomeChannel = member.guild.channels.cache.get(WELCOME_CHANNEL_ID);
-        if (!welcomeChannel) return console.error('Welcome kanál nebyl nalezen.');
-
-        const welcomeEmbed = new EmbedBuilder()
-            .setColor('#502a7c')
-            .setTitle('SkyWay Roleplay | CZ/SK Roleplay')
-            .setDescription(
-                `Vítej ${member}!\n\n` +
-                `Před připojením si prosím přečti <#${INFO_CHANNEL_ID}>\n` +
-                `**Přejeme ti příjemnou zábavu a mnoho zážitků!**`
-            )
-            .setImage(WELCOME_IMAGE_URL)
-            .setFooter({ 
-                text: 'SkyWay Roleplay | CZ/SK Roleplay', 
-                iconURL: member.guild.iconURL() 
-            });
-
-        await welcomeChannel.send({
-            content: `Vítej ${member}!`,
-            embeds: [welcomeEmbed]
-        });
-
-    } catch (error) {
-        console.error('Chyba při odesílání welcome zprávy:', error);
-    }
 });
 
 client.on('interactionCreate', async interaction => {
