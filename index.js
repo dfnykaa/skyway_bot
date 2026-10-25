@@ -11,7 +11,11 @@ const fs = require('fs');
 const path = require('path');
 
 
-const TOKEN = process.env.MTQ4MDEyMzI3NDE3MDk5MDY3NA.GbVkru.053M8yHTy1TWhNGp4LedFuBRlxdhqmPoLtUNYg; 
+const TOKEN = process.env.DISCORD_TOKEN;
+if (!TOKEN) {
+    console.error('Chybí DISCORD_TOKEN v proměnných prostředí!');
+    process.exit(1);
+}
 const CLIENT_ID = '1480123274170990674'; 
 
 const BLACKLIST_CHANNEL_ID = '1552378277191090306'; 
