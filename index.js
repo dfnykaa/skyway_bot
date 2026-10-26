@@ -20,7 +20,8 @@ const CLIENT_ID = '1480123274170990674';
 
 const BLACKLIST_CHANNEL_ID = '1552378277191090306'; 
 const BLACKLIST_ROLE_ID = '1549476288551460935'; 
-const COUNTER_CHANNEL_ID = '1555650966110478446'; 
+const COUNTER_CHANNEL_ID = '1555650966110478446';
+const ALLOWED_ROLE_ID = '1553794693303898193';
 
 const DATA_FILE = path.join(__dirname, 'blacklists.json');
 
@@ -106,7 +107,10 @@ client.once('ready', () => {
 client.on('interactionCreate', async interaction => {
     if (!interaction.isChatInputCommand()) return;
 
-    if (!interaction.member.permissions.has(PermissionFlagsBits.Administrator)) {
+    const isAdmin = interaction.member.permissions.has(PermissionFlagsBits.Administrator);
+    const hasAllowedRole = interaction.member.roles.cache.has(ALLOWED_ROLE_ID);
+
+    if (!isAdmin && !hasAllowedRole) {
         return interaction.reply({ content: 'Nemáš dostatečná oprávnění k použití tohoto příkazu!', ephemeral: true });
     }
 
@@ -207,7 +211,7 @@ client.on('interactionCreate', async interaction => {
 
         const unblackDmEmbed = new EmbedBuilder()
             .setColor('#29c268')
-            .setTitle(`✅ Tvůj Blacklist byl zrušen na serveru ${interaction.guild.name}`)
+v          .setTitle(`✅ Tvůj Blacklist byl zrušen na serveru ${interaction.guild.name}`)
             .addFields(
                 { name: 'Důvod zrušení', value: unblackReason },
                 { name: 'Administrátor', value: interaction.user.tag }
@@ -216,7 +220,7 @@ client.on('interactionCreate', async interaction => {
 
         try {
             await target.roles.remove(BLACKLIST_ROLE_ID); 
-            delete blacklists[target.id];
+          	delete blacklists[target.id];
             saveBlacklists(blacklists);
 
             await logChannel.send({ embeds: [unblacklistEmbed] });
